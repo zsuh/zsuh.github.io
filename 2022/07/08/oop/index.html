@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zsuh.cc","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1、什么是封装？封装的意义，实现Java封装的步骤。2、继承的基本概念；继承的特性；子类对象的实例化过程。3、什么是多态？多态的实现条件，多态的实现形式。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java面向对象 - 封装、继承、多态">
+<meta property="og:url" content="https://zsuh.cc/2022/07/08/oop/index.html">
+<meta property="og:site_name" content="ZsuHao Blog">
+<meta property="og:description" content="1、什么是封装？封装的意义，实现Java封装的步骤。2、继承的基本概念；继承的特性；子类对象的实例化过程。3、什么是多态？多态的实现条件，多态的实现形式。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210116101000946.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/b794419736f328cc7547a3342296a847.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210116102503986.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzQ3MTc0NzMw,size_16,color_FFFFFF,t_70">
+<meta property="article:published_time" content="2022-07-08T00:48:00.000Z">
+<meta property="article:modified_time" content="2022-07-26T16:31:23.414Z">
+<meta property="article:author" content="张素豪">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="面向对象">
+<meta property="article:tag" content="封装">
+<meta property="article:tag" content="继承">
+<meta property="article:tag" content="多态">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20210116101000946.png">
+
+<link rel="canonical" href="https://zsuh.cc/2022/07/08/oop/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Java面向对象 - 封装、继承、多态 | ZsuHao Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">ZsuHao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录学习生活</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/zsuh" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zsuh.cc/2022/07/08/oop/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i12.zsuh.cc/images/2022/07/qq.jpg">
+      <meta itemprop="name" content="张素豪">
+      <meta itemprop="description" content="美丽纯洁的仙女被大表哥抢走了">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZsuHao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java面向对象 - 封装、继承、多态<a href="/undefined_posts/oop.md" class="post-edit-link" title="编辑"><i class="fa fa-pencil-alt"></i></a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-07-08 08:48:00" itemprop="dateCreated datePublished" datetime="2022-07-08T08:48:00+08:00">2022-07-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-27 00:31:23" itemprop="dateModified" datetime="2022-07-27T00:31:23+08:00">2022-07-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/" itemprop="url" rel="index"><span itemprop="name">面向对象</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/07/08/oop/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/07/08/oop/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+            <div class="post-description">1、什么是封装？封装的意义，实现Java封装的步骤。2、继承的基本概念；继承的特性；子类对象的实例化过程。3、什么是多态？多态的实现条件，多态的实现形式。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h2><h3 id="概念："><a href="#概念：" class="headerlink" title="概念："></a>概念：</h3><p>封装是把过程和数据包围起来，数据被保护在内部，对数据的访问只能通过已定义的接口，即只能通过已定义的方法去访问这些私有属性(成员方法)</p>
+<h3 id="封装的好处"><a href="#封装的好处" class="headerlink" title="封装的好处"></a>封装的好处</h3><p>封装的好处：能够实现对数据保护性，封装就是隐藏了类或方法的具体实现细节降低了软件的耦合度，便于软件的更新与改动，将类中的私有属性封装后，这样更安全，封装后的调用代码重用性高，安全。</p>
+<h3 id="实现封装的步骤"><a href="#实现封装的步骤" class="headerlink" title="实现封装的步骤:"></a>实现封装的步骤:</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> String name;</span><br><span class="line"><span class="keyword">private</span> <span class="type">double</span> balance;</span><br><span class="line"><span class="keyword">private</span> String password;</span><br></pre></td></tr></table></figure>
+<p>Java提供了可以对外访问的方法，也就是创建一对取值和赋值的方法，用于对私有属性的访问和赋值，可以对输入的数据进行验证。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//取值方法如下</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> name;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//赋值方法如下</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.name = name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>封装时的权限控制符区别如下:<br><img src="https://img-blog.csdnimg.cn/20210116101000946.png"><br><strong>实例：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Account</span> &#123;</span><br><span class="line"><span class="comment">//定义三个private属性，私有属性的范围只能由该类中的函数、其友元函数访问,不能被任何其他访问,该类</span></span><br><span class="line"><span class="comment">//的对象也不能访问</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> balance;</span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Account</span><span class="params">()</span> &#123;    <span class="comment">//定义一个无参构造器</span></span><br><span class="line"> </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Account</span><span class="params">(String name, <span class="type">double</span> balance, String password)</span> &#123; </span><br><span class="line">  <span class="comment">//定义一个有参构造器调用set方法对三个属性进行设置</span></span><br><span class="line">       setBalance(balance);</span><br><span class="line">       setName(name);</span><br><span class="line">       setPassword(password);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//定义获取name属性的公开方法</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//定义设置name属性的公开方法，可以通过方法对name属性进行验证，提高安全性</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (name.length()&gt;=<span class="number">2</span> &amp;&amp; name.length()&lt;=<span class="number">4</span>)&#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;姓名输入有误！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//定义获取余额属性的公开方法</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">getBalance</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> balance;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//定义设置balance属性的公开方法，可以通过方法对balance属性进行验证</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setBalance</span><span class="params">(<span class="type">double</span> balance)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (balance &gt;= <span class="number">20.0</span>) &#123;</span><br><span class="line">            <span class="built_in">this</span>.balance = balance;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;余额必须大于20块钱！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//定义获取密码属性的公开方法</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getPassword</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> password; <span class="comment">//这里可以进行自定义验证</span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//定义设置password属性的公开方法</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setPassword</span><span class="params">(String password)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (password.length() == <span class="number">6</span>)&#123;</span><br><span class="line">        <span class="built_in">this</span>.password = password;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;密码必须是6位数！&quot;</span>);</span><br><span class="line">            <span class="built_in">this</span>.password=<span class="string">&quot;123456&quot;</span>;</span><br><span class="line">            System.out.println(<span class="string">&quot;默认密码为123456！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;用户：&quot;</span>+name+<span class="string">&quot; &quot;</span>+<span class="string">&quot;余额是：&quot;</span>+balance);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>主方法调用：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AccountTest</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line"> <span class="comment">//调用有参构造器，传入参数，会在构造器里面调用方法，进行数据验证</span></span><br><span class="line">        <span class="type">Account</span> <span class="variable">account</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Account</span>(<span class="string">&quot;mike&quot;</span>,<span class="number">2000</span>,<span class="string">&quot;1234256&quot;</span>); </span><br><span class="line"><span class="comment">//print方法用来输出想要获取的数据，这里也可以单独调用get方法获取个别属性</span></span><br><span class="line">        account.print();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>采用 this 关键字是为了解决实例变量（private String name）和局部变量（setName(String name)中的name变量）之间发生的同名的冲突。<br><strong>总结：</strong><br>封装最主要的功能在于我们能修改自己的实现代码，而不用修改那些调用我们代码的程序片段，适当的封装可以让程式码更容易理解与维护，也加强了程式码的安全性。</p>
+<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><h3 id="继承的概念"><a href="#继承的概念" class="headerlink" title="继承的概念:"></a>继承的概念:</h3><p>封装是把过程和数据包围起来，数据被保护在内部，对数据的访问只能通过已定义的接口，即只能通过已定义的方法去访问这些私有属性。<br><img src="https://img-blog.csdnimg.cn/img_convert/b794419736f328cc7547a3342296a847.png"><br><em>例子：</em><br>🐇和🐏属于食草动物类，🦁和🐅属于食肉动物类。<br>食草动物和食肉动物又是属于动物类。<br>所以继承需要符合的关系是：is-a，父类更通用，子类更具体。<br>虽然食草动物和食肉动物都是属于动物，但是两者的属性和行为上有差别，所以子类会具有父类的一般特性也会具有自身的特性。</p>
+<h3 id="继承的好处："><a href="#继承的好处：" class="headerlink" title="继承的好处："></a>继承的好处：</h3><p>继承就是子类继承父类,使子类具有父类的各种属性和方法,好处就是避免多余的代码出现 , 代码的复用性提高了 ， 代码的扩展性和维护性提高了，为多态提供了前提。</p>
+<h3 id="继承的基本语法："><a href="#继承的基本语法：" class="headerlink" title="继承的基本语法："></a>继承的基本语法：</h3><p>class  子类  extends  父类{ }，子类会继承父类的方法和属性，子类也可以定义特定的方法和属性</p>
+<h2 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h2><h3 id="所谓多态："><a href="#所谓多态：" class="headerlink" title="所谓多态："></a>所谓多态：</h3><p>就是指一个类实例的相同方法在不同情形有不同表现形式。多态机制使具有不同内部结构的对象可以共享相同的外部接口。这意味着，虽然针对不同对象的具体操作不同，但通过一个公共的类，它们（那些操作）可以通过相同的方式予以调用。<br>多态就是同一个接口，使用不同的实例而执行不同操作，如图所示：<br><img src="https://img-blog.csdnimg.cn/20210116102503986.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzQ3MTc0NzMw,size_16,color_FFFFFF,t_70"><br>多态性是对象多种表现形式的体现。<br>现实中，比如我们按下F1键这个动作：<br>如果当前在Flash界面下弹出的就是AS 3的帮助文档；<br>如果当前在Word下弹出的就是Word帮助；<br>在Windows下弹出的就是Windows帮助和支持。<br>同一个事件发生在不同的对象上会产生不同的结果。<br>多态的实现条件<br>多态的三个条件:<br>继承的存在(继承是多态的基础，没有继承就没有多态)；<br>子类重写父类的方法(多态下调用子类重写的方法)；<br>父类引用变量指向子类对象(子类到父类的类型转换)。<br>子类转换成父类时的规则:<br>将一个父类的引用指向一个子类的对象，称为向上转型(upcasting)，自动进行类型转换。此时通过父类引用调用的方法是子类覆盖或继承父类的方法，不是父类的方法。 此时通过父类引用变量无法调用子类特有的方法；<br>如果父类要调用子类的特有方法就得将一个指向子类对象的父类引用赋给一个子类的引用，称为向下转型，此时必须进行强制类型转换。<br>以下是一个多态实例的演示，详细说明请看注释：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestAnimalDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        show(<span class="keyword">new</span> <span class="title class_">Cat</span>()); <span class="comment">// 以 Cat 对象调用 show 方法</span></span><br><span class="line">        show(<span class="keyword">new</span> <span class="title class_">Dog</span>()); <span class="comment">// 以 Dog 对象调用 show 方法</span></span><br><span class="line">        <span class="type">Animal</span> <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Cat</span>(); <span class="comment">// 向上转型</span></span><br><span class="line">        a.eat(); <span class="comment">// 调用的是 Cat 的 eat</span></span><br><span class="line">        <span class="type">Cat</span> <span class="variable">c</span> <span class="operator">=</span> (Cat) a; <span class="comment">// 向下转型</span></span><br><span class="line">        c.work(); <span class="comment">// 调用的是 Cat 的 work</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">show</span><span class="params">(Animal a)</span> &#123;</span><br><span class="line">        a.eat();</span><br><span class="line">        <span class="comment">// 类型判断</span></span><br><span class="line">        <span class="keyword">if</span> (a <span class="keyword">instanceof</span> Cat) &#123; <span class="comment">// 猫做的事情</span></span><br><span class="line">            <span class="type">Cat</span> <span class="variable">c</span> <span class="operator">=</span> (Cat) a;</span><br><span class="line">            c.work();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (a <span class="keyword">instanceof</span> Dog) &#123; <span class="comment">// 狗做的事情</span></span><br><span class="line">            <span class="type">Dog</span> <span class="variable">c</span> <span class="operator">=</span> (Dog) a;</span><br><span class="line">            c.work();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">Animal</span> &#123;</span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">eat</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Cat</span> <span class="keyword">extends</span> <span class="title class_">Animal</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">eat</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;吃鱼&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">work</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;抓老鼠&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Dog</span> <span class="keyword">extends</span> <span class="title class_">Animal</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">eat</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;吃骨头&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">work</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;看家&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以用 instanceof 判断一个类是否实现了某个接口，也可以用它来判断一个实例对象是否属于一个类。instanceof 的语法格式为:<br>对象 instanceof 类(或接口)，它的返回值是布尔型的，或真(true)、或假(false)。<br>#####多态的实现形式<br>在Java中有两种形式可以实现多态：继承和接口。<br>基于继承实现的多态<br>基于继承的实现机制主要表现在父类和继承该父类的一个或多个子类对某些方法的重写，多个子类对同一方法的重写可以表现出不同的行为。<br>基于继承实现的多态可以总结如下：对于引用子类的父类类型，在处理该引用时，它适用于继承该父类的所有子类，子类对象的不同，对方法的实现也就不同，执行相同动作产生的行为也就不同。<br>如果父类是抽象类，那么子类必须要实现父类中所有的抽象方法，这样该父类所有的子类一定存在统一的对外接口，但其内部的具体实现可以各异。这样我们就可以使用顶层类提供的统一接口来处理该层次的方法。<br>基于接口实现的多态<br>继承是通过重写父类的同一方法的几个不同子类来体现的，那么就可能是通过实现接口并覆盖接口中同一方法的几不同的类体现的。<br>在接口的多态中，指向接口的引用必须是指定实现了该接口的一个类的实例程序，在运行时，根据对象引用的实际类型来执行对应的方法。<br>继承都是单继承，只能为一组相关的类提供一致的服务接口。但是接口可以是多继承多实现，它能够利用一组相关或者不相关的接口进行组合与扩充，能够对外提供一致的服务接口。所以它相对于继承来说有更好的灵活性。<br>编程要求<br>根据提示，在右侧编辑器补充代码：<br>声明一个Animal类，此类中定义eat()方法；<br>声明Dog类、Cat类、Lion类，均继承自Animal类，并复写了eat()方法；<br>运用多态方式实例化子类对象并调用eat()方法打印输出信息；<br>具体输出要求请看测试说明。<br>测试说明<br>测试输入：无<br>预期输出：<br>eating bread…<br>eating rat…<br>eating meat…<br>开始你的任务吧，祝你成功！<br>参考代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> case8;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestPolymorphism</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">		<span class="comment">// 以多态方式分别实例化子类对象并调用eat()方法</span></span><br><span class="line">		<span class="comment">/********* begin *********/</span></span><br><span class="line">           Animal a=<span class="keyword">new</span> <span class="title class_">Dog</span>();</span><br><span class="line">		   a.eat();</span><br><span class="line">		   Animal b=<span class="keyword">new</span> <span class="title class_">Cat</span>();</span><br><span class="line">		   b.eat();</span><br><span class="line">		   Animal c=<span class="keyword">new</span> <span class="title class_">Lion</span>();</span><br><span class="line">		   c.eat();</span><br><span class="line">		<span class="comment">/********* end *********/</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Animal类中定义eat()方法</span></span><br><span class="line">  <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">Animal</span> &#123;</span><br><span class="line">	<span class="comment">/********* begin *********/</span></span><br><span class="line">     <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">eat</span><span class="params">()</span>;</span><br><span class="line">	<span class="comment">/********* end *********/</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Dog类继承Animal类 复写eat()方法</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Dog</span> <span class="keyword">extends</span> <span class="title class_">Animal</span> &#123;</span><br><span class="line">	<span class="comment">/********* begin *********/</span></span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">eat</span><span class="params">()</span>&#123;</span><br><span class="line">		  System.out.println(<span class="string">&quot;eating bread...&quot;</span>);</span><br><span class="line">	  &#125;</span><br><span class="line">	<span class="comment">/********* end *********/</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Cat类继承Animal类 复写eat()方法</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Cat</span> <span class="keyword">extends</span> <span class="title class_">Animal</span> &#123;</span><br><span class="line">	<span class="comment">/********* begin *********/</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">eat</span><span class="params">()</span>&#123;</span><br><span class="line">	   System.out.println(<span class="string">&quot;eating rat...&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">	<span class="comment">/********* end *********/</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Lion类继承Animal类 复写eat()方法</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Lion</span> <span class="keyword">extends</span> <span class="title class_">Animal</span> &#123;</span><br><span class="line">	<span class="comment">/********* begin *********/</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">eat</span><span class="params">()</span>&#123;</span><br><span class="line">	   System.out.println(<span class="string">&quot;eating meat...&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">	<span class="comment">/********* end *********/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/" rel="tag"># 面向对象</a>
+              <a href="/tags/%E5%B0%81%E8%A3%85/" rel="tag"># 封装</a>
+              <a href="/tags/%E7%BB%A7%E6%89%BF/" rel="tag"># 继承</a>
+              <a href="/tags/%E5%A4%9A%E6%80%81/" rel="tag"># 多态</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/07/25/addhexo/" rel="next" title="搭建hexo博客系统并上传Github进行托管-基础建站篇">
+      搭建hexo博客系统并上传Github进行托管-基础建站篇 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%81%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">封装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">概念：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%81%E8%A3%85%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="nav-number">1.2.</span> <span class="nav-text">封装的好处</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E5%B0%81%E8%A3%85%E7%9A%84%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.3.</span> <span class="nav-text">实现封装的步骤:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%A7%E6%89%BF"><span class="nav-number">2.</span> <span class="nav-text">继承</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%A7%E6%89%BF%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">2.1.</span> <span class="nav-text">继承的概念:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%A7%E6%89%BF%E7%9A%84%E5%A5%BD%E5%A4%84%EF%BC%9A"><span class="nav-number">2.2.</span> <span class="nav-text">继承的好处：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%A7%E6%89%BF%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%EF%BC%9A"><span class="nav-number">2.3.</span> <span class="nav-text">继承的基本语法：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E6%80%81"><span class="nav-number">3.</span> <span class="nav-text">多态</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%80%E8%B0%93%E5%A4%9A%E6%80%81%EF%BC%9A"><span class="nav-number">3.1.</span> <span class="nav-text">所谓多态：</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="张素豪"
+      src="https://i12.zsuh.cc/images/2022/07/qq.jpg">
+  <p class="site-author-name" itemprop="name">张素豪</p>
+  <div class="site-description" itemprop="description">美丽纯洁的仙女被大表哥抢走了</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zsuh" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zsuh" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zsuhao@qq.com" title="E-Mail → mailto:zsuhao@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/zsuh" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;zsuh" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://yudada.cn/" title="http:&#x2F;&#x2F;yudada.cn" rel="noopener" target="_blank">鱼大大博客</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.unitymake.com/" title="https:&#x2F;&#x2F;www.unitymake.com" rel="noopener" target="_blank">麦瑞克博客</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">豫ICP备2022010397号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">张素豪</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '788mBEp1sO19NU11yC6H611z-gzGzoHsz',
+      appKey     : 'Q88bNLMucDle4Hb2dgos6wJ5',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
